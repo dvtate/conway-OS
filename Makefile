@@ -1,4 +1,4 @@
-CC:=g++
+CC:=gcc
 AS:=as
 LD:=ld
 QEMU:=qemu-system-i386
@@ -7,7 +7,7 @@ QEMUOPTS:=
 
 KERN_LINK_SCRIPT:=kernel.ld
 
-KERN_CFLAGS:= -ffreestanding -nostdlib -m32 -fno-exceptions -fno-rtti
+KERN_CFLAGS:= -ffreestanding -nostdlib -m32
 KERN_LDFLAGS:= -T $(KERN_LINK_SCRIPT) -m elf_i386
 
 bootloader.bin: bootloader.o
@@ -28,9 +28,9 @@ kernel.o: kernel.c
 ckern.bin: boot.o kernel.o
 	$(LD) $(KERN_LDFLAGS) -o $@ kernel.o boot.o
 
-iso: lowkern.bin ckern.bin
-	@cp lowkern.bin ckern.bin cdrom/boot/
-	@grub-mkrescue -o p2kern.iso cdrom
+iso: ckern.bin
+	@cp ckern.bin cdrom/boot/
+	@grub-mkrescue -o kern.iso cdrom
 
 bootloader.o: bootloader.S
 	$(AS) --32 -o $@ $<
@@ -40,9 +40,6 @@ dump_bl: bootloader.bin
 
 run-bl: bootloader.bin
 	$(QEMU) -nographic -drive file=bootloader.bin,index=0,media=disk,format=raw $(QEMUOPTS)
-
-# dump_lowkern: lowkern.bin
-# 	@objdump -D -m i386 lowkern.bin
 
 clean:
 	@rm -f *.bin *.o *.log *.iso
