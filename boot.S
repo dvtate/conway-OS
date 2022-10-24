@@ -24,7 +24,7 @@ hdr_end:
 .globl kernel_entry
 kernel_entry:
     # Jump to C
-	# movl $boot_stack_start, %esp
+	movl $boot_stack_start, %esp
     call bootmain
 
 end:
