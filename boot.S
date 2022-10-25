@@ -1,6 +1,4 @@
-/*
-* Multiboot header
-*/
+# Multiboot header
 .section .multiboot_hdr
 .set MULTIBOOT_MAGIC, 0xe85250d6
 .set ARCH, 0x0
@@ -14,8 +12,15 @@ multiboot_hdr:
 	/* no special tags */
 	.word 0, 0
 	.long 8
-
 hdr_end:
+
+
+# Stack
+.section .bss
+.align 16
+stack_bottom:
+.skip 16384 # 16 KiB
+stack_top:
 
 
 # Kernel
@@ -23,8 +28,10 @@ hdr_end:
 .code32
 .globl kernel_entry
 kernel_entry:
-    # Jump to C
-	movl $boot_stack_start, %esp
+	# Initialize stack
+	mov $stack_top, %esp
+
+	# Jump to C++
     call bootmain
 
 end:

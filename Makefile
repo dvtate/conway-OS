@@ -30,6 +30,8 @@ iso: kern.bin
 bootloader.o: bootloader.S
 	$(AS) --32 -o $@ $<
 
+all: bootloader.bin kern.bin iso
+
 dump_bl: bootloader.bin
 	@objdump -D -b binary -m i8086 $<
 
