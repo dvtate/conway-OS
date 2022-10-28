@@ -129,6 +129,7 @@ struct GameView {
     unsigned m_x{0}, m_y{0};
 
     // Where is the user cursor
+    // ?? Relative or absolute
     unsigned m_cursor_x, m_cursor_y;
 
     // Is the cursor illuminated this frame?
@@ -141,11 +142,30 @@ struct GameView {
         m_cursor_y = m_y + m_wy / 2;
     }
 
-    // TODO member fns to move cursor and vp
+    void move_cursor(int dx, const int dy) {
+        if (dx < 0) {
+            if (m_cursor_x > -dx) {
+                m_cursor_x - (unsigned)(-dx);
+            } else {
+                dx += m_cursor_x;
+                m_cursor_x = 0;
+                if (m_x > 0 && dx != 0) {
+                    if (dx > m_x)
+                        m_x = 0;
+                    else
+                        m_x -= (unsigned)(-dx);
+                }
+            }
+        } else if (dx > m_wx) {
+
+        }
+    }
 };
 
+// TODO display game
+// TODO register and connect controls
 
-
+// Controls help menu
 const char* controls =
     "Controls"
     "[space]        - start/stop simulation"
@@ -153,11 +173,10 @@ const char* controls =
     "X              - kill cell at cursor"
     "C              - spawn cell at cursor"
     "[WASD]         - move camera"
-    ""
     ;
 
 void init() {
-
+    // ??
 }
 
 
