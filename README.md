@@ -11,5 +11,4 @@ Controls are as follows:
 [arrows]       - move cursor
 X              - kill cell at cursor
 C              - spawn cell at cursor
-[WASD]         - move camera
 ```

@@ -8,7 +8,7 @@ QEMU:=qemu-system-i386
 
 KERN_LINK_SCRIPT:=kernel.ld
 
-KERN_CFLAGS:= -ffreestanding -nostdlib -m32 -fno-exceptions -fno-rtti
+KERN_CFLAGS:= -ffreestanding -nostdlib -m32 -fno-exceptions -fno-rtti -fno-stack-protector
 KERN_LDFLAGS:= -T $(KERN_LINK_SCRIPT) -m elf_i386
 
 bootloader.bin: bootloader.o
