@@ -1,4 +1,6 @@
-
 - Storing grid in memory: can't just freely use memory..
+    - Correct: https://wiki.osdev.org/Detecting_Memory_(x86)
+    - rn im just hoping assuming past 0xFEB00000 is free
 - Using clock
 - Reading and responding to user input
+- Drawing: what resolution? pixels or chars? what graphics interface? text?

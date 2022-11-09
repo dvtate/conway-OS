@@ -11,33 +11,27 @@ KERN_LINK_SCRIPT:=kernel.ld
 KERN_CFLAGS:= -ffreestanding -nostdlib -m32 -fno-exceptions -fno-rtti -fno-stack-protector
 KERN_LDFLAGS:= -T $(KERN_LINK_SCRIPT) -m elf_i386
 
-bootloader.bin: bootloader.o
-	$(LD) -m elf_i386 -Ttext 0x7c00 --oformat binary -o $@ $<
-
-boot.o: boot.S
+boot.o: src/boot.S
 	$(CC) $(KERN_CFLAGS) -o $@ -c $<
 
-kernel.o: kernel.cpp
+kernel.o: src/kernel.cpp
+	$(CC) $(KERN_CFLAGS) -o $@ -c $<
+crt.o: src/crt.cpp
 	$(CC) $(KERN_CFLAGS) -o $@ -c $<
 
-kern.bin: boot.o kernel.o
-	$(LD) $(KERN_LDFLAGS) -o $@ kernel.o boot.o
+kern.bin: boot.o kernel.o crt.o
+	$(LD) $(KERN_LDFLAGS) -o $@ kernel.o boot.o crt.o
 
 iso: kern.bin
 	@cp kern.bin cdrom/boot/
 	@grub-mkrescue -o kern.iso cdrom
 
-bootloader.o: bootloader.S
-	$(AS) --32 -o $@ $<
+all: kern.bin iso
 
-all: bootloader.bin kern.bin iso
-
-dump_bl: bootloader.bin
+dump: kern.bin
 	@objdump -D -b binary -m i8086 $<
 
-run-bl: bootloader.bin
-	$(QEMU) -vga std -drive file=bootloader.bin,index=0,media=disk,format=raw $(QEMUOPTS)
-run-iso: iso
+run: iso
 	$(QEMU) -cdrom kern.iso
 
 clean:

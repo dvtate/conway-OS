@@ -1,8 +1,6 @@
 #include <cinttypes>
 
-
-#include "./include/crt.hpp"
-
+#include "crt.hpp"
 
 /**
  * Application Model for conway's game of life
@@ -234,10 +232,9 @@ void init() {
 /**
  * Invoked by bootloader
  */
-extern "C" void bootmain(void)
-{
+extern "C" void bootmain(void) {
     init();
     ConwayGame game{80, 25};
-    GameView view(game, 80, 25);
+    GameView view{game, 80, 25};
 
 }
