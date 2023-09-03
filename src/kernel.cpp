@@ -126,10 +126,9 @@ struct ConwayGame {
     }
 };
 
-enum class Direction {
-    NORTH, EAST, SOUTH, WEST,
-};
-
+/**
+* Application view
+*/
 struct GameView {
     // Game that we are viewing
     ConwayGame m_game;
@@ -176,34 +175,30 @@ struct GameView {
         m_game.update();
     }
 
-    void move_cursor(Direction d) {
-        switch (d) {
-        case Direction::NORTH:
-            if (m_cursor_y)
-                m_cursor_y--;
-            else if (m_y)
-                m_y--;
-            break;
-        case Direction::EAST:
-            if (m_cursor_x < m_width)
-                m_cursor_x++;
-            else if (m_x < m_game.m_width)
-                m_x++;
-            break;
-        case Direction::SOUTH:
-            if (m_cursor_y < m_height)
-                m_cursor_y++;
-            else if (m_y < m_game.m_height)
-                m_y++;
-            break;
-        case Direction::WEST:
-            if (m_cursor_x)
-                m_cursor_x--;
-            else if (m_x)
-                m_x--;
-            break;
-        }
+    void move_cursor(int dx, int dy) {
+        if (dx < 0)
+            if (m_cursor_x < dx)
+                m_cursor_x = 0;
+            else
+                m_cursor_x -= dx;
+        else
+            if (m_cursor_x + dx > m_width)
+                m_cursor_x = m_width - 1;
+            else
+                m_cursor_x += dx;
+
+        if (dy < 0)
+            if (m_cursor_y < dy)
+                m_cursor_y = 0;
+            else
+                m_cursor_y -= dy;
+        else
+            if (m_cursor_y + dy > m_width)
+                m_cursor_y = m_height - 1;
+            else
+                m_cursor_y += dy;
     }
+
     inline void spawn() {
         m_game.set(m_x + m_cursor_x, m_y + m_cursor_y, true);
     }
@@ -215,12 +210,17 @@ struct GameView {
 // TODO display game
 // TODO register and connect controls
 
+struct GameControls {
+
+}
+
+
 // Controls help menu
 const char* controls =
-    "Controls"
-    "[space]        - start/stop simulation"
-    "[arrows]       - move cursor"
-    "X              - kill cell at cursor"
+    "Controls\n"
+    "[space]        - start/stop simulation\n"
+    "WASD           - move cursor\n"
+    "X              - kill cell at cursor\n"
     "C              - spawn cell at cursor"
     ;
 
