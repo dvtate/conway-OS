@@ -12,3 +12,8 @@ Controls are as follows:
 X              - kill cell at cursor
 C              - spawn cell at cursor
 ```
+
+## Build
+```console
+$ sudo pacman -S grub libisoburn mtools qemu-full
+```

@@ -8,7 +8,7 @@ QEMU:=qemu-system-i386
 
 KERN_LINK_SCRIPT:=kernel.ld
 
-KERN_CFLAGS:= -ffreestanding -nostdlib -m32 -fno-exceptions -fno-rtti -fno-stack-protector
+KERN_CFLAGS:= -ffreestanding -nostdlib -m32 -fno-exceptions -fno-rtti -fno-stack-protector --std=c++20
 KERN_LDFLAGS:= -T $(KERN_LINK_SCRIPT) -m elf_i386
 
 boot.o: src/boot.S
@@ -16,11 +16,9 @@ boot.o: src/boot.S
 
 kernel.o: src/kernel.cpp
 	$(CC) $(KERN_CFLAGS) -o $@ -c $<
-crt.o: src/crt.cpp
-	$(CC) $(KERN_CFLAGS) -o $@ -c $<
 
-kern.bin: boot.o kernel.o crt.o
-	$(LD) $(KERN_LDFLAGS) -o $@ kernel.o boot.o crt.o
+kern.bin: boot.o kernel.o
+	$(LD) $(KERN_LDFLAGS) -o $@ kernel.o boot.o
 
 iso: kern.bin
 	@cp kern.bin cdrom/boot/

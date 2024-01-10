@@ -1,11 +1,14 @@
+#pragma once
 #include <cinttypes>
 
 #include "crt.hpp"
+#include "keyboard.hpp"
+#include "display.hpp"
 
 /**
  * Application Model for conway's game of life
  */
-struct ConwayGame {
+struct ConwayGameModel {
     // Dimensions
     const unsigned m_height, m_width;
 
@@ -15,7 +18,7 @@ struct ConwayGame {
     /**
      * Constructor
      */
-    ConwayGame(const unsigned height, const unsigned width):
+    ConwayGameModel(const unsigned height, const unsigned width):
         m_height(height), m_width(width)
     {
         const unsigned long size = (unsigned long) height * (unsigned long) width;
@@ -129,9 +132,9 @@ struct ConwayGame {
 /**
 * Application view
 */
-struct GameView {
+struct ConwayGame {
     // Game that we are viewing
-    ConwayGame m_game;
+    ConwayGameModel m_game;
 
     // Viewport dimensions
     unsigned m_width, m_height;
@@ -144,19 +147,45 @@ struct GameView {
     unsigned m_cursor_x, m_cursor_y;
 
     // Is the cursor illuminated this frame?
-    bool m_cursor_lit{false};
+    bool m_cursor_lit: 1 {false};
 
-    GameView(ConwayGame game, const unsigned viewport_height, const unsigned viewport_width):
-        m_game(game), m_width(viewport_width), m_height(viewport_height)
+    // wasd states
+    bool m_key_up: 1 {false};
+    bool m_key_down: 1 {false};
+    bool m_key_left: 1 {false};
+    bool m_key_right: 1 {false};
+
+    // Is the simulation currently paused
+    bool m_paused: 1 {true};
+
+    ConwayGame(const unsigned viewport_height, const unsigned viewport_width):
+        m_game(viewport_height, viewport_width), m_width(viewport_width), m_height(viewport_height)
     {
-        m_cursor_x = m_width / 2;
-        m_cursor_y = m_height / 2;
+        m_cursor_x = 0;// m_width / 2;
+        m_cursor_y = 0;// m_height / 2;
     }
 
     void show() {
-        auto* p = m_game.m_grid;
-        const auto* p_max = p + (m_game.m_height * m_game.m_width >> 3);
+        unsigned i = 0;
+        const auto i_max = m_game.m_height * m_game.m_width;
+
         unsigned x = 0;
+        unsigned y = 0;
+
+        // VGA::clear();
+        do {
+            x = i % m_width;
+            y = i / m_height;
+            bool live = m_game.at(i);
+            if (x == m_cursor_x && y == m_cursor_y)
+                VGA::putc(live ? 'X' : 'C');
+            else
+                VGA::putc(live ? '#' : '_');
+        } while (++i < i_max);
+
+        // TODO use this optimized algorthim instead
+        // auto* p = m_game.m_grid;
+        // const auto* p_max = p + (m_game.m_height * m_game.m_width >> 3);
         // do {
         //     for (uint8_t i = 0; i < 8; i++) {
         //         if (x == m_game.m_width) {
@@ -167,17 +196,27 @@ struct GameView {
         //         x++;
         //     }
         // } while (++p != p_max);
-        // std::cout <<std::flush;\
-        
-        // TODO
+        // std::cout <<std::flush;
     }
 
-    void frame() {
-        show();
-        m_game.update();
+    void cursor_up() {
+        m_cursor_x--;
+    }
+    void cursor_down() {
+        m_cursor_x++;
+    }
+    void cursor_right() {
+        m_cursor_y++;
+    }
+    void cursor_left() {
+        m_cursor_y--;
+    }
+    void put_cursor(const unsigned x, const unsigned y) {
+        m_cursor_x = x;
+        m_cursor_y = y;
     }
 
-    void move_cursor(int dx, int dy) {
+    void move_cursor(const int dx, const int dy) {
         if (dx < 0)
             if (m_cursor_x < dx)
                 m_cursor_x = 0;
@@ -207,9 +246,82 @@ struct GameView {
     inline void kill() {
         m_game.set(m_x + m_cursor_x, m_y + m_cursor_y, false);
     }
+
+    void tick() {
+        // Get keyboard input
+        switch (Keyboard::get_key())
+        {
+            // Toggle pause
+            case Keyboard::Key::SPACE_DOWN:
+                m_paused = !m_paused;
+                // VGA::putc('_');
+                break;
+
+            // Kill
+            case Keyboard::Key::X_DOWN:
+                kill();
+                // VGA::putc('x');
+                break;
+
+            // Spawn
+            case Keyboard::Key::C_DOWN:
+                spawn();
+                // VGA::putc('c');
+                break;
+
+            // WASD
+            case Keyboard::Key::W_DOWN:
+                m_key_up = true;
+                // VGA::putc('w');
+                break;
+            case Keyboard::Key::W_UP:
+                m_key_up = false;
+                // VGA::putc('W');
+                break;
+            case Keyboard::Key::A_DOWN:
+                m_key_left = true;
+                // VGA::putc('a');
+                break;
+            case Keyboard::Key::A_UP:
+                m_key_left = false;
+                // VGA::putc('A');
+                break;
+            case Keyboard::Key::S_DOWN:
+                m_key_down = true;
+                // VGA::putc('s');
+                break;
+            case Keyboard::Key::S_UP:
+                m_key_down = false;
+                // VGA::putc('S');
+                break;
+            case Keyboard::Key::D_DOWN:
+                m_key_right = true;
+                // VGA::putc('d');
+                break;
+            case Keyboard::Key::D_UP:
+                m_key_right = false;
+                // VGA::putc('D');
+                break;                
+        }
+
+        // Move cursor
+        if (m_key_up && !m_key_down)
+            cursor_up();
+        if (m_key_down && !m_key_up)
+            cursor_down();
+        if (m_key_left && !m_key_right)
+            cursor_left();
+        if (m_key_right && !m_key_left)
+            cursor_right();
+        
+        // Update game state
+        if (!m_paused)
+            m_game.update();
+
+        // Display the game
+        show();
+
+        // Sleep?
+        io_wait();
+    }
 };
-
-
-struct GameControls {
-
-}
