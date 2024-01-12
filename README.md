@@ -1,8 +1,11 @@
 # Conway's Game of Life Operating System
 An operating system that's just Conway's Game of Life.
 
+![demo](demo.gif)
+
 ## Building
 See the [makefile](Makefile). Try `make clean && make all && make run`.
+
 ### Dependencies
 Look at the [Dockerfile](Dockerfile) for some recommended packages.
 ```console
@@ -17,7 +20,6 @@ Controls are as follows:
 X              - kill cell at cursor
 C              - spawn cell at cursor
 ```
-
 
 ## TODO
 - splash screen with controls ([enter] to continue)
