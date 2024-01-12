@@ -17,3 +17,10 @@ C              - spawn cell at cursor
 ```console
 $ sudo pacman -S grub libisoburn mtools qemu-full
 ```
+
+## TODO
+- splash screen with controls ([enter] to continue)
+- use PIT instead of spamming io_wait (which can damage hardware)
+- vesa graphics
+- better keyboard driver (IRQ)
+- scrollable map (and/or zoom if vesa graphics added)

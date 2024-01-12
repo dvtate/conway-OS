@@ -34,16 +34,34 @@ extern "C" void bootmain(void) {
     // TODO splash screen with controls instructions
 
     // Run game
-    ConwayGame game{80, 25};
-    game.m_game.set(10, 10, true);
-    game.m_game.set(10, 11, true);
-    game.m_game.set(11, 10, true);
-    game.m_game.set(11, 11, true);
+    ConwayGame game{25, 80};
+    game.m_game.set(20, 20, true);
+    game.m_game.set(20, 21, true);
+    game.m_game.set(21, 20, true);
+    game.m_game.set(21, 21, true);
 
-    // VGA::puts("asdmklfasklfmklasfmklfadmklasdfmklafmklaf");
-    // VGA::clear();
-    // VGA::puts("fuck me");
+    game.m_game.set(15, 10, true);
+    game.m_game.set(15, 11, true);
+    game.m_game.set(15, 12, true);
     
+    game.m_game.set(5, 1, true);
+    game.m_game.set(6, 1, true);
+    game.m_game.set(4, 2, true);
+    game.m_game.set(7, 2, true);
+    game.m_game.set(3, 3, true);
+    game.m_game.set(8, 3, true);
+    game.m_game.set(2, 4, true);
+    game.m_game.set(9, 4, true);
+    game.m_game.set(2, 5, true);
+    game.m_game.set(9, 5, true);
+    game.m_game.set(3, 6, true);
+    game.m_game.set(8, 6, true);
+    game.m_game.set(4, 7, true);
+    game.m_game.set(7, 7, true);
+    game.m_game.set(5, 8, true);
+    game.m_game.set(6, 8, true);
+
+
     for (;;)
         for (char i = 0; ; i++) {
             // if (i == 0)

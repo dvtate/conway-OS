@@ -14,6 +14,8 @@ struct ConwayGameModel {
 
     // Densly packed grids
     uint8_t* m_grid, * m_grid2;
+    uint8_t m_grid_arr[80*25];
+    uint8_t m_grid2_arr[80*25];
 
     /**
      * Constructor
@@ -22,8 +24,10 @@ struct ConwayGameModel {
         m_height(height), m_width(width)
     {
         const unsigned long size = (unsigned long) height * (unsigned long) width;
-        m_grid = (uint8_t*) malloc(size);
-        m_grid2 = (uint8_t*) malloc(size);
+        // m_grid = (uint8_t*) malloc(size);
+        // m_grid2 = (uint8_t*) malloc(size);
+        m_grid2 = m_grid2_arr;
+        m_grid = m_grid_arr;
     }
 
     inline unsigned long raw_ind(const unsigned x, const unsigned y) {
@@ -158,11 +162,13 @@ struct ConwayGame {
     // Is the simulation currently paused
     bool m_paused: 1 {true};
 
+    uint8_t frame;
+
     ConwayGame(const unsigned viewport_height, const unsigned viewport_width):
         m_game(viewport_height, viewport_width), m_width(viewport_width), m_height(viewport_height)
     {
-        m_cursor_x = 0;// m_width / 2;
-        m_cursor_y = 0;// m_height / 2;
+        m_cursor_x = m_width / 2;
+        m_cursor_y = m_height / 2;
     }
 
     void show() {
@@ -177,11 +183,15 @@ struct ConwayGame {
             x = i % m_width;
             y = i / m_height;
             bool live = m_game.at(i);
-            if (x == m_cursor_x && y == m_cursor_y)
-                VGA::putc(live ? 'X' : 'C');
-            else
-                VGA::putc(live ? '#' : '_');
+            VGA::putc(live ? '#' : ' ');
         } while (++i < i_max);
+
+        // Draw cursor
+        VGA::putc_at(
+            m_game.at(m_cursor_x, m_cursor_y) ? 'X' : 'C',
+            m_cursor_x,
+            m_cursor_y
+        );
 
         // TODO use this optimized algorthim instead
         // auto* p = m_game.m_grid;
@@ -200,16 +210,20 @@ struct ConwayGame {
     }
 
     void cursor_up() {
-        m_cursor_x--;
+        if (m_cursor_y > 0)
+            m_cursor_y--;
     }
     void cursor_down() {
-        m_cursor_x++;
-    }
-    void cursor_right() {
-        m_cursor_y++;
+        if (m_cursor_y < m_height)
+            m_cursor_y++;
     }
     void cursor_left() {
-        m_cursor_y--;
+        if (m_cursor_x > 0)
+            m_cursor_x--;
+    }
+    void cursor_right() {
+        if (m_cursor_x < m_width)
+            m_cursor_x++;
     }
     void put_cursor(const unsigned x, const unsigned y) {
         m_cursor_x = x;
@@ -305,23 +319,33 @@ struct ConwayGame {
         }
 
         // Move cursor
-        if (m_key_up && !m_key_down)
-            cursor_up();
-        if (m_key_down && !m_key_up)
-            cursor_down();
-        if (m_key_left && !m_key_right)
-            cursor_left();
-        if (m_key_right && !m_key_left)
-            cursor_right();
-        
+        // Slowly
+        if (frame++ == 0) {
+            if (m_key_up && !m_key_down)
+                cursor_up();
+            if (m_key_down && !m_key_up)
+                cursor_down();
+            if (m_key_left && !m_key_right)
+                cursor_left();
+            if (m_key_right && !m_key_left)
+                cursor_right();
+        }
+
         // Update game state
         if (!m_paused)
             m_game.update();
 
         // Display the game
+        VGA::overwrite();
         show();
+        // VGA::putd(m_cursor_x);
+        // VGA::putc(',');
+        // VGA::putd(m_cursor_y);
+        // VGA::putc(';');
 
-        // Sleep?
-        io_wait();
+
+        // Need a better way of sleeping than this lol
+        for (int i = 0 ; i < 20000; i++)
+            io_wait();
     }
 };

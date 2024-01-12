@@ -27,8 +27,7 @@ static inline void outb(uint16_t port, uint8_t val)
 /**
  * Read from port
  */
-static inline uint8_t inb(uint16_t port)
-{
+static inline uint8_t inb(uint16_t port) {
     uint8_t ret;
     asm volatile ( "inb %1, %0"
                    : "=a"(ret)
@@ -40,7 +39,6 @@ static inline uint8_t inb(uint16_t port)
 /**
  * Wait a short amount of time (1 to 4 microseconds, generally)
  */
-static inline void io_wait(void)
-{
+static inline void io_wait(void) {
     outb(0x80, 0);
 }
