@@ -54,6 +54,7 @@ namespace VGA {
         fb[vga_index++] = (uint16_t)c | (uint16_t)color << 8;    
     }
 
+    // Print an int
     void putd(int n, const Color color = Color::GREEN) {
         static char rret[512];
         int digit = 0;
@@ -67,6 +68,7 @@ namespace VGA {
             putc(rret[digit], color);
     }
 
+    // Put a char at a specific location
     void putc_at(char c, int x, int y, const Color color = Color::GREEN) {
         const int i = y * 80 + x;
         fb[i] = (uint16_t)c | (uint16_t)color << 8;

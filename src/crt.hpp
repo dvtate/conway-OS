@@ -15,8 +15,7 @@ void* malloc(unsigned long nbytes) {
 /**
  * Write to port
  */
-static inline void outb(uint16_t port, uint8_t val)
-{
+static inline void outb(uint16_t port, uint8_t val) {
     asm volatile ( "outb %0, %1" : : "a"(val), "Nd"(port) : "memory");
     /* There's an outb %al, $imm8 encoding, for compile-time constant port numbers that fit in 8b. (N constraint).
      * Wider immediate constants would be truncated at assemble-time (e.g. "i" constraint).

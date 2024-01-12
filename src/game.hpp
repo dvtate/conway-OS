@@ -320,6 +320,7 @@ struct ConwayGame {
 
         // Move cursor
         // Slowly
+        // TODO better keyboard driver
         if (frame++ == 0) {
             if (m_key_up && !m_key_down)
                 cursor_up();

@@ -35,15 +35,19 @@ extern "C" void bootmain(void) {
 
     // Run game
     ConwayGame game{25, 80};
+
+    // 4x4 block stable
     game.m_game.set(20, 20, true);
     game.m_game.set(20, 21, true);
     game.m_game.set(21, 20, true);
     game.m_game.set(21, 21, true);
 
+    // Spinner
     game.m_game.set(15, 10, true);
     game.m_game.set(15, 11, true);
     game.m_game.set(15, 12, true);
     
+    // Octagon 2
     game.m_game.set(5, 1, true);
     game.m_game.set(6, 1, true);
     game.m_game.set(4, 2, true);
@@ -61,11 +65,6 @@ extern "C" void bootmain(void) {
     game.m_game.set(5, 8, true);
     game.m_game.set(6, 8, true);
 
-
     for (;;)
-        for (char i = 0; ; i++) {
-            // if (i == 0)
-            //     VGA::clear();
-            game.tick();
-        }
+        game.tick();
 }

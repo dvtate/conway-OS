@@ -45,7 +45,7 @@
  */
 namespace Keyboard {
 
-
+    // These are the only keycodes we care about
     enum class Key : unsigned char {
         W_DOWN = 0x11,
         A_DOWN = 0x1E,
@@ -69,7 +69,7 @@ namespace Keyboard {
 
     void init() {
         // TODO setup irq handler somehow
-        // idt entry and more pain
+        // gdt, idt entry and more pain
     }
 
     Key get_key() {
@@ -81,19 +81,4 @@ namespace Keyboard {
         outb(0x61, data | 0x80); // Disable KB
         outb(0x61, data & 0x7F); // Enable KB
     }
-
-    // void set_leds(bool numled, bool capsled, bool scrollled) 
-    // {     
-    //     constexpr char SCROLL_LED = 1; 
-    //     constexpr char NUM_LED    = 2; 
-    //     constexpr char CAPS_LED   = 4;
-    //     unsigned char temp = 0;     
-    //     temp = (scrollled) ? (temp | SCROLL_LED ) : (temp & SCROLL_LED);    
-    //     temp = (numled) ?  (num | NUM_LED) : (num & NUM_LED);   
-    //     temp = (capsled) ? (num | CAPS_LED) : (num & CAPS_LED); 
-    //     while((inportb(0x64)&2)!=0){} //Wait for the keyboard controller to receive command 
-    //     outportb(0x60,0xED);
-    //     while((inportb(0x64)&2)!=0){} //Wait for the keyboard controller to receive command  
-    //     outportb(0x60,temp); 
-    // }
 };

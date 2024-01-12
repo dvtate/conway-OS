@@ -2,7 +2,12 @@
 An operating system that's just Conway's Game of Life.
 
 ## Building
-See the [makefile](Makefile).
+See the [makefile](Makefile). Try `make clean && make all && make run`.
+### Dependencies
+Look at the [Dockerfile](Dockerfile) for some recommended packages.
+```console
+# pacman -S base-devel g++ grub libisoburn mtools qemu-full
+```
 
 ## Usage
 Controls are as follows:
@@ -13,10 +18,6 @@ X              - kill cell at cursor
 C              - spawn cell at cursor
 ```
 
-## Build
-```console
-$ sudo pacman -S grub libisoburn mtools qemu-full
-```
 
 ## TODO
 - splash screen with controls ([enter] to continue)
