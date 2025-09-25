@@ -1,12 +1,5 @@
-#include <cinttypes>
-
 #include "crt.hpp"          // C runtime
 #include "game.hpp"         // Game logic
-
-// TODO display game
-// TODO register and connect controls
-
-
 
 // Controls help menu
 const char* controls =
@@ -17,12 +10,10 @@ const char* controls =
     "C              - spawn cell at cursor"
     ;
 
-
 // Initialize anything that needs initializing
 void init() {
     Keyboard::init();
 }
-
 
 /**
  * Invoked by bootloader
@@ -33,7 +24,7 @@ extern "C" void bootmain(void) {
 
     // TODO splash screen with controls instructions
 
-    // Run game
+    // Initialize game
     ConwayGame game{25, 80};
 
     // 4x4 block stable
@@ -65,6 +56,7 @@ extern "C" void bootmain(void) {
     game.m_game.set(5, 8, true);
     game.m_game.set(6, 8, true);
 
+    // Run game
     for (;;)
         game.tick();
 }

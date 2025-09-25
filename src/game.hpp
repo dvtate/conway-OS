@@ -1,5 +1,4 @@
 #pragma once
-#include <cinttypes>
 
 #include "crt.hpp"
 #include "keyboard.hpp"
@@ -134,8 +133,8 @@ struct ConwayGameModel {
 };
 
 /**
-* Application view
-*/
+ * Application view
+ */
 struct ConwayGame {
     // Game that we are viewing
     ConwayGameModel m_game;

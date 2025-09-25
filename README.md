@@ -21,7 +21,8 @@ X              - kill cell at cursor
 C              - spawn cell at cursor
 ```
 ## Disclaimer
-DO NOT INSTALL THIS ON YOUR MACHINE!!
+**DO NOT INSTALL THIS ON YOUR MACHINE!!**
+
 It spams io_wait to slow down the animation and on some machines this can result in physical damage.
 I am not responsible for any damage you cause with this software.
 

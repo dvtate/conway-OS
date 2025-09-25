@@ -1,5 +1,7 @@
 #pragma once
 
+#include <cinttypes>
+
 #define fence() __asm__ volatile ("":::"memory")
 
 /**

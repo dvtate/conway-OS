@@ -1,6 +1,6 @@
 #pragma once
+
 #include "crt.hpp"
-#include <cinttypes>
 
 namespace VGA {
     // Frame buffer
