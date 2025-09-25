@@ -15,10 +15,10 @@ Look at the [Dockerfile](Dockerfile) for some recommended packages.
 ## Usage
 Controls are as follows:
 ```
-[space]        - start/stop simulation
-[arrows]       - move cursor
-X              - kill cell at cursor
-C              - spawn cell at cursor
+[space]     - start/stop simulation
+WASD        - move cursor
+C           - spawn cell at cursor
+X           - kill cell at cursor
 ```
 ## Disclaimer
 **DO NOT INSTALL THIS ON YOUR MACHINE!!**

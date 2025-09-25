@@ -6,8 +6,8 @@ const char* controls =
     "Controls\n"
     "[space]        - start/stop simulation\n"
     "WASD           - move cursor\n"
-    "X              - kill cell at cursor\n"
-    "C              - spawn cell at cursor"
+    "C              - spawn cell at cursor\n"
+    "X              - kill cell at cursor"
     ;
 
 // Initialize anything that needs initializing
